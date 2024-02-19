@@ -1,73 +1,107 @@
 <template>
-  <div>New URL (https only)</div>
-  <input type=text v-model="url1" :class="{error: isInvalidUrl(url1)}" />
-  <br><br>
-  <div>Confirm URL</div>
-  <input type=text v-model="url2" :class="{error: isInvalidUrl(url2)}" />
+    <div :class="$style.container">
+        <div :class="$style.form">
+            <URLInput label="New URL (https only)"></URLInput>
+            <URLInput label="Confirm URL"></URLInput>
+            
+            <div :class="$style.errors">
+                <Error message="Provided URLs must be the same!" v-show="url1 != url2"></Error>
+                <Error message="Provided URL must be a valid https link!" v-show="url1 != url2"></Error>
+            </div>
+            <button :class="$style.button" @click="submit">Save</button>
+        </div>
+    </div>
+  </template>
   
-  <div class="errors">
-      <div class="error-text" v-show="url1 != url2">
-        Provided URLs must be the same!
-      </div>
-
-      <div class="error-text" v-show="url1 != url2">
-        Provided URL must be a valid https link!
-      </div>
-  </div>
-  <br>
-  <button @click="submit">Save</button>
-
-</template>
-
 <script>
-import HelloWorldVue from "./components/HelloWorld.vue";
-import { addNewUrl } from "./api";
-export default {
-  name: "App",
-  data() {
-    return {
-      url1: '',
-      url2: null,
-      notSame: null,
-    };
-  },
-  watch: {
-  },
-  components: {
-    HelloWorld: HelloWorldVue,
-  },
-  methods: {
-    isInvalidUrl(url) {
-      return !url || !url.match(/https:\/\/.*/)?.[0];
-    },
-    submit() {
-      // clean whitespace from start/end
-      var clean = this.url1.replaceAll(' ', '');
 
-      addNewUrl(clean).then(function () {
-        alert('Saved!');
-      });
+import URLInput from "./components/URLInput.vue";
+import Error from "./components/Error.vue";
+import { addNewUrl } from "./api";
+
+export default {
+    name: "App",
+    data() {
+        return {
+            url1: '',
+            url2: null,
+            notSame: null,
+        };
     },
-  },
+    watch: {
+    },
+    components: {
+        URLInput,
+        Error
+        // HelloWorld: HelloWorldVue,
+    },
+    methods: {
+        isInvalidUrl(url) {
+            return !url || !url.match(/https:\/\/.*/)?.[0];
+        },
+        submit() {
+            // clean whitespace from start/end
+            var clean = this.url1.replaceAll(' ', '');
+
+            addNewUrl(clean).then(function () {
+                alert('Saved!');
+            });
+        },
+    },
 };
 </script>
-
-<style>
+  
+<style module>
 :root {
-  --brand-danger: #ff0000;
+    --brand-danger: #ff0000;
+    --brand-dark: #232325;
+    --brand-light: #ffffff;
+    --brand-lighter: #ffffff12;
+    background-color: var(--brand-dark);
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
 }
 
-input {
-  outline: none; /* Prevent blue border when error border is visible */
+.container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 5vw 0;
+}
+  
+.form{
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    border: 1px solid var(--brand-light);
+    border-radius: 16px;
+    padding: 40px;
+    width: 465px;
+    min-width: 22vw;
+    background-color: var(--brand-lighter);
 }
 
-.error-text {
-  padding: 16px;
-  color: --brand-danger;
-  margin-bottom: -16px;
+.button{
+    min-width: 100px;
+    max-width: 182px;
+    width: 19vw;
+    background-color: var(--brand-light);
+    color: var(--brand-dark);
+    border: none;
+    border-radius: 16px;
+    padding: 8px 26px;
+    display: block;
+    font-size: 1.2rem;
+    margin: auto;
 }
 
-.error {
-  border: 1px solid red;
+.errors{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: fit-content;
+    min-height: 91px;
 }
-</style>
+
+</style> 
