@@ -5,10 +5,10 @@
             <URLInput label="Confirm URL" @checkInput="updateSecondUrl"></URLInput>
             
             <div :class="$style.errors">
-                <Error message="Provided URLs must be the same!" v-show="url1 != url2"></Error>
-                <Error message="Provided URL must be a valid https link!" v-show="url1 != url2"></Error>
+                <Error message="Provided URLs must be the same!" v-show="equalityError"></Error>
+                <Error message="Provided URL must be a valid https link!" v-show="invalidError"></Error>
             </div>
-            <button :class="$style.button" @click="submit">Save</button>
+            <button :class="$style.button" @click="checkUrls">Save</button>
         </div>
     </div>
   </template>
@@ -17,14 +17,16 @@
 
 import URLInput from "./components/URLInput.vue";
 import Error from "./components/Error.vue";
-// import { addNewUrl } from "./api";
+import { addNewUrl } from "./api";
 
 export default {
     name: "App",
     data() {
         return {
             firstUrl: '',
-            secondUrl: ''
+            secondUrl: '',
+            invalidError: false,
+            equalityError: false,
         };
     },
     components: {
@@ -40,23 +42,36 @@ export default {
         },
         checkEquality() {
             if (this.firstUrl === this.secondUrl) {
-                console.log('equal')
+                this.equalityError = false;
             } else {
                 console.log('error!');
             }
         },
-        isInvalidUrl(url) {
-            return !url || !url.match(/https:\/\/.*/)?.[0];
+        checkUrls(){
+            this.equalityError = this.isNotEqual;
+            this.invalidError = this.isInvalidUrl;
+            if(!this.equalityError && !this.invalidError){
+                this.submit();
+            } else{
+                console.log('wrong!')
+            }
         },
         submit() {
-            this.checkEquality();
-            // clean whitespace from start/end
-            // var clean = this.url1.replaceAll(' ', '');
-
-            // addNewUrl(clean).then(function () {
-            //     alert('Saved!');
-            // });
+            console.log('submit')
+            addNewUrl().then(function () {
+                alert('Saved!');
+            });
+            
         },
+    },
+    computed: {
+        isNotEqual() {
+            return this.firstUrl !== this.secondUrl;
+        },
+        isInvalidUrl() {
+            const urlRegex = /^https:\/\/[^\s/$.?#].[^\s]*$/;
+            return !urlRegex.test(this.firstUrl) || !urlRegex.test(this.secondUrl);
+        }
     },
 };
 </script>
