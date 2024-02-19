@@ -1,8 +1,8 @@
 <template>
     <div :class="$style.container">
         <div :class="$style.form">
-            <URLInput label="New URL (https only)" @checkInput="updateFirstUrl"></URLInput>
-            <URLInput label="Confirm URL" @checkInput="updateSecondUrl"></URLInput>
+            <URLInput label="New URL (https only)" @checkInput="updateFirstUrl" :checkInvalidUrl="checkInvalidUrl"></URLInput>
+            <URLInput label="Confirm URL" @checkInput="updateSecondUrl" :checkInvalidUrl="checkInvalidUrl"></URLInput>
             
             <div :class="$style.errors">
                 <Error message="Provided URLs must be the same!" v-show="equalityError"></Error>
@@ -47,6 +47,10 @@ export default {
                 console.log('error!');
             }
         },
+        checkInvalidUrl(url) {
+            const urlRegex = /^https:\/\/[^\s/$.?#].[^\s]*$/;
+            return !urlRegex.test(url);
+        },
         checkUrls(){
             this.equalityError = this.isNotEqual;
             this.invalidError = this.isInvalidUrl;
@@ -69,8 +73,7 @@ export default {
             return this.firstUrl !== this.secondUrl;
         },
         isInvalidUrl() {
-            const urlRegex = /^https:\/\/[^\s/$.?#].[^\s]*$/;
-            return !urlRegex.test(this.firstUrl) || !urlRegex.test(this.secondUrl);
+            return this.checkInvalidUrl(this.firstUrl) || this.checkInvalidUrl(this.secondUrl);
         }
     },
 };

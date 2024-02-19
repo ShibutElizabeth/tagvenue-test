@@ -2,7 +2,7 @@
     <div :class="$style.box">
         <label :class="$style.box__label">{{ label }}</label>
         <input 
-            :class="$style.box__input" 
+            :class="[$style.box__input,  checkInvalidUrl(urlValue) ? $style.box__input_error : '']" 
             type=text 
             v-model="urlValue" 
             @input="emitUrlValue" 
@@ -21,6 +21,10 @@
         placeholder: {
             type: String,
             default: 'https://hello.com'
+        },
+        checkInvalidUrl: {
+            type: Function,
+            default: () => {}
         }
     },
     data() {
@@ -66,6 +70,10 @@
     border: none;
     outline: none;
     border-bottom: 1px solid var(--brand-light);
+}
+
+.box__input_error{
+    border-bottom: 1px solid var(--brand-danger);
 }
 </style>
   
