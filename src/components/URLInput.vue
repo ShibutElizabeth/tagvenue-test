@@ -8,10 +8,10 @@
             @input="emitUrlValue" 
             :placeholder="placeholder" />
     </div>
-  </template>
-  
+</template>
+
 <script>
-  export default {
+export default {
     name: "URLInput",
     props: {
         label: {
@@ -37,8 +37,8 @@
             this.$emit('check-input', this.urlValue);
         }
     }
-  };
-  </script>
+};
+</script>
   
 <style module>
 .box{

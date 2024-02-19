@@ -11,10 +11,9 @@
             <button :class="$style.button" @click="checkUrls">Save</button>
         </div>
     </div>
-  </template>
+</template>
   
 <script>
-
 import URLInput from "./components/URLInput.vue";
 import Error from "./components/Error.vue";
 import { addNewUrl } from "./api";
@@ -43,8 +42,6 @@ export default {
         checkEquality() {
             if (this.firstUrl === this.secondUrl) {
                 this.equalityError = false;
-            } else {
-                console.log('error!');
             }
         },
         checkInvalidUrl(url) {
@@ -56,16 +53,12 @@ export default {
             this.invalidError = this.isInvalidUrl;
             if(!this.equalityError && !this.invalidError){
                 this.submit();
-            } else{
-                console.log('wrong!')
             }
         },
         submit() {
-            console.log('submit')
             addNewUrl().then(function () {
                 alert('Saved!');
             });
-            
         },
     },
     computed: {
