@@ -1,13 +1,18 @@
 <template>
     <div :class="$style.box">
         <label :class="$style.box__label">{{ label }}</label>
-        <input :class="$style.box__input" type=text v-model="urlValue" :placeholder="placeholder" />
+        <input 
+            :class="$style.box__input" 
+            type=text 
+            v-model="urlValue" 
+            @input="emitUrlValue" 
+            :placeholder="placeholder" />
     </div>
   </template>
   
 <script>
   export default {
-    name: "App",
+    name: "URLInput",
     props: {
         label: {
             type: String,
@@ -24,6 +29,9 @@
       };
     },
     methods: {
+        emitUrlValue() {
+            this.$emit('check-input', this.urlValue);
+        }
     }
   };
   </script>

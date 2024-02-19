@@ -1,8 +1,8 @@
 <template>
     <div :class="$style.container">
         <div :class="$style.form">
-            <URLInput label="New URL (https only)"></URLInput>
-            <URLInput label="Confirm URL"></URLInput>
+            <URLInput label="New URL (https only)" @checkInput="updateFirstUrl"></URLInput>
+            <URLInput label="Confirm URL" @checkInput="updateSecondUrl"></URLInput>
             
             <div :class="$style.errors">
                 <Error message="Provided URLs must be the same!" v-show="url1 != url2"></Error>
@@ -17,35 +17,45 @@
 
 import URLInput from "./components/URLInput.vue";
 import Error from "./components/Error.vue";
-import { addNewUrl } from "./api";
+// import { addNewUrl } from "./api";
 
 export default {
     name: "App",
     data() {
         return {
-            url1: '',
-            url2: null,
-            notSame: null,
+            firstUrl: '',
+            secondUrl: ''
         };
-    },
-    watch: {
     },
     components: {
         URLInput,
         Error
-        // HelloWorld: HelloWorldVue,
     },
     methods: {
+        updateFirstUrl(value) {
+            this.firstUrl = value.replaceAll(' ', '');
+        },
+        updateSecondUrl(value) {
+            this.secondUrl = value.replaceAll(' ', '');
+        },
+        checkEquality() {
+            if (this.firstUrl === this.secondUrl) {
+                console.log('equal')
+            } else {
+                console.log('error!');
+            }
+        },
         isInvalidUrl(url) {
             return !url || !url.match(/https:\/\/.*/)?.[0];
         },
         submit() {
+            this.checkEquality();
             // clean whitespace from start/end
-            var clean = this.url1.replaceAll(' ', '');
+            // var clean = this.url1.replaceAll(' ', '');
 
-            addNewUrl(clean).then(function () {
-                alert('Saved!');
-            });
+            // addNewUrl(clean).then(function () {
+            //     alert('Saved!');
+            // });
         },
     },
 };
